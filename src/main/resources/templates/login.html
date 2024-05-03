@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link rel="stylesheet" href="/CSS/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #555;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        p a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<header>로그인후 서비스 이용이 가능합니다.</header>
+<div class="container">
+
+    <h1>로그인</h1>
+    <form action="/member/login" method="post" id="loginForm">
+        <input type="text" id="email" placeholder="아이디" name="email" required>
+        <input type="password" id="pw" placeholder="비밀번호" name="pw" required>
+        <button type="submit">로그인</button>
+    </form>
+    <p>계정이 없으신가요? <a href="/member/join">회원가입</a></p>
+</div>
+</body>
+<script>
+    // 폼 제출 시
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // 기본 제출 행동 방지
+
+            // 폼 데이터를 JSON으로 변환
+            const formData = {
+                email: document.getElementById('email').value,
+                pw: document.getElementById('pw').value,
+            };
+
+            // JSON 데이터를 서버로 전송
+            createBoard(formData);
+        });
+    });
+
+    // 게시글 작성 함수
+    function createBoard(formData) {
+        fetch('http://localhost:8090/member/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData) // JSON으로 변환한 데이터를 전송
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.login) {
+                    console.log(data.login);
+                    console.log('login account success:', data);
+                    // 성공적으로 로그인한 후 다음 페이지로 이동
+                    window.location.href = 'http://localhost:8090/'; // 페이지 이동 경로를 적절하게 수정하세요
+                } else {
+                    // 로그인 실패
+                    console.log(data.login);
+                    alert('로그인에 실패했습니다. 다시 시도해주세요.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // 네트워크 오류 또는 서버 오류
+                alert('네트워크 오류 또는 서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            });
+    }
+</script>
+
+</html>

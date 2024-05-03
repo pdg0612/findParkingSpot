@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주차장 정보</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #333;
+            color: #fff;
+        }
+
+        tr:hover {
+            background-color: #f4f4f4;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination a {
+            color: #333;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+            border-radius: 4px;
+        }
+
+        .pagination a.active {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button[type="submit"] {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<header th:include="header.html">
+
+</header>
+<form action="/" method="GET">
+    <label for="search">주차장 이름 검색:</label>
+    <input type="text" id="search" name="search">
+    <button type="submit">검색</button>
+</form>
+<table border="1">
+    <thead>
+    <tr>
+        <th>주차장 번호</th>
+        <th>주차장 이름</th>
+        <th>주차장 종류</th>
+        <th>도로명 주소</th>
+        <th>운영 요일</th>
+        <th>평일 운영 시작 시간</th>
+        <th>평일 운영 종료 시간</th>
+        <th>주차 요금 정보</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="info : ${page.content}">
+        <td th:text="${info.prkplceNo}"></td>
+        <td th:text="${info.prkplceNm}"></td>
+        <td th:text="${info.prkplceSe}"></td>
+        <td th:text="${info.rdnmadr}"></td>
+        <td th:text="${info.operDay}"></td>
+        <td th:text="${info.weekdayOperOpenHhmm}"></td>
+        <td th:text="${info.weekdayOperCloseHhmm}"></td>
+        <td th:text="${info.parkingchrgeInfo}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="pagination">
+    <span>페이지:</span>
+    <th:block th:if="${page.number} >= 5">
+        <a th:href="@{'?pageNumber=' + ${(page.number)-1}}" th:class="${page.number} ? 'active'">이전</a>
+    </th:block>
+    <th:block th:with="startPage=${(page.number / 5) * 5}">
+        <th:block th:each="i : ${#numbers.sequence(startPage, startPage + 4)}">
+            <a th:href="@{'?pageNumber=' + ${i}} " th:class="${i} == ${page.number} ? 'active'">[[${i + 1}]]</a>
+        </th:block>
+    </th:block>
+    <th:block th:if="${page.number} < 1698">
+        <a th:href="@{'?pageNumber=' + ${(page.number)+1}}"  th:class="${page.number} ? 'active'">다음</a>
+    </th:block>
+</div>
+</body>                    
+</html>                    
+                           
